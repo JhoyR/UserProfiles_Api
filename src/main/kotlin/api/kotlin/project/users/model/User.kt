@@ -1,12 +1,12 @@
 package api.kotlin.project.users.model
 
-import java.time.LocalDateTime
+import java.time.LocalDate
 
 data class User (
-    val id: Long? = null,
+    var id: Long? = null,
     val name: String,
     val email: String,
     val password: String,
     val status: StatusUser = StatusUser.ATIVO,
-    val date: LocalDateTime = LocalDateTime.now()
+    val date: LocalDate = LocalDate.now()
 )

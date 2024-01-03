@@ -1,9 +1,11 @@
 package api.kotlin.project.users.controller
 
-import api.kotlin.project.users.dto.UserDto
-import api.kotlin.project.users.model.User
+import api.kotlin.project.users.dto.NewUserForm
+import api.kotlin.project.users.dto.UserView
 import api.kotlin.project.users.service.UserService
+import jakarta.validation.Valid
 import org.springframework.web.bind.annotation.*
+import java.time.LocalDate
 
 //Anotações
 @RestController
@@ -13,26 +15,36 @@ class UserController(private val service: UserService) {
 
     @GetMapping
     //Retorna a lista com todos os usuários cadastrados
-    fun allUsers(): List<User> {
+    fun allUsers(): List<UserView> {
         return service.allUsers()
     }
 
     //Retorna o usuário com base no id, por meio da uri "/{id}
     @GetMapping("/{id}")
     //Para que o spring saiba que o parâmetro id faz parte da uri - @PathVariable
-    fun searchForId(@PathVariable id: Long): User {
-    return service.searchForId(id)
+    fun searchForId(@PathVariable id: Long): UserView {
+        return service.searchForId(id)
     }
 
-    //Retorna quantos usuários foram adicionados no dia informado
-    //Se chamado sem parâmetro, retorna a média de usuários adicionados por dia
-//    @GetMapping("/perDay/{date}")
-//    fun addedPerDay(@PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) date: LocalDate?): User {
-//        return service.addedPerDay(date)
-//    }
+    //Retorna quantos usuários foram adicionados no dia informado (formato: YYYY-MM-DD)
+    @GetMapping("/perDay/{date}")
+    fun perDay(@PathVariable date: String): Int {
+        return service.perDay(date)
+    }
+    //Retorna quantos usuários foram adicionados no dia atual
+    @GetMapping("/perDay")
+    fun perDayEmpty(): Int {
+        return service.today()
+    }
 
+    //Rota para criar um novo usuário, considerando as validações propostas
     @PostMapping
-    fun toAdd(@RequestBody user: UserDto){
-        service.toAdd(user)
+    fun create(@RequestBody @Valid user: NewUserForm) {
+        service.create(user)
     }
+
+    //POST
+
+
+    //DELETE
 }
