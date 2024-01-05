@@ -9,5 +9,5 @@ data class UserView (
     val name: String,
     val email: String,
     val status: StatusUser,
-    val date: LocalDate
+    val dateAdd: LocalDate
 )
