@@ -6,8 +6,11 @@ import api.kotlin.project.users.dto.UserView
 import api.kotlin.project.users.service.UserService
 import jakarta.transaction.Transactional
 import jakarta.validation.Valid
+import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -22,21 +25,22 @@ import java.time.LocalDate
 class UserController(private val service: UserService) {
 
     @GetMapping
+    @Cacheable("userList")
     //Retorna a lista com todos os usuários cadastrados
     fun findAll(
-        pagination: Pageable
+        @PageableDefault(size = 10) pagination: Pageable
     ): Page<UserView> {
         return service.findAll(pagination)
     }
 
     //Retorna o usuário com base no id, por meio da uri "/{id}
     @GetMapping("/{id}")
-    //Para que o spring saiba que o parâmetro id faz parte da uri - @PathVariable
+    //Para que o spring saiba que o parâmetro {id} faz parte da uri - @PathVariable
     fun searchForId(@PathVariable id: Long): UserView {
         return service.searchForId(id)
     }
 
-    //Retorna quantos usuários foram adicionados no dia informado (formato: YYYY-MM-DD)
+    //Retorna quantos usuários foram adicionados no dia informado (formato: YYYY-MM-DD) - '/byDay?2024-01-01'
     //Quando vazio, retorna quantos usuários foram adicionados no dia atual
     @GetMapping("/byDay")
     fun perDay(@RequestParam(required = false) date: String?): Long {
@@ -44,8 +48,9 @@ class UserController(private val service: UserService) {
     }
 
     //Rota para criar um novo usuário, considerando as validações propostas
-    @PostMapping    // RETORNA 201, LEVA CABEÇALHO E LOCATION, E O RECURSO NO CORPO DA RESPOSTA
+    @PostMapping
     @Transactional
+    @CacheEvict(value = ["userList"], allEntries = true) //Limpa todos os caches "userList"
     fun create(
         @RequestBody @Valid
         user: NewUserForm,
@@ -57,17 +62,19 @@ class UserController(private val service: UserService) {
     }
 
     //Rota para atualizar um usuário existente
-    @PutMapping      //RETORNA 200, E LEVA O RECURSO NO CORPO DA RESPOSTA ATUALIZADO
+    @PutMapping
     @Transactional
+    @CacheEvict(value = ["userList"], allEntries = true)
     fun update(@RequestBody @Valid form: UpdateUserForm): ResponseEntity<UserView> {
         val userView = service.update(form)
         return ResponseEntity.ok(userView)
     }
 
     //DELETE
-    @DeleteMapping("/{id}")     //RETORNA CODIGO 204
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Transactional
+    @CacheEvict(value = ["userList"], allEntries = true)
     fun delete(@PathVariable id: Long) {
         service.delete(id)
     }
