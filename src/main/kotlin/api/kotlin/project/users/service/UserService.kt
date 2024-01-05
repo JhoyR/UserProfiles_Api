@@ -1,92 +1,73 @@
 package api.kotlin.project.users.service
 
 import api.kotlin.project.users.dto.NewUserForm
+import api.kotlin.project.users.dto.UpdateUserForm
 import api.kotlin.project.users.dto.UserView
+import api.kotlin.project.users.exception.NotFoundException
 import api.kotlin.project.users.mapper.UserFormMapper
 import api.kotlin.project.users.mapper.UserViewMapper
-import api.kotlin.project.users.model.User
+import api.kotlin.project.users.repository.UserRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.RequestParam
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.util.*
 import java.util.stream.Collectors
 
 //Anotação para classes representantes de serviços
 @Service
 
 class UserService(
-    private var users: List<User> = ArrayList(),
+    private val repository: UserRepository,
     private val userViewMapper: UserViewMapper,
-    private val userFormMapper: UserFormMapper
+    private val userFormMapper: UserFormMapper,
+    private val notFoundMessage: String = "Usuário não encontrado"
 ) {
-    //region init
-    init {
-        val user1 = User(
-            id = 1,
-            name = "Jhoy",
-            email = "jhoymartins@gmail.com",
-            password = "123456",
-            date = LocalDate.parse("2023-12-31")
-        )
-        val user2 = User(
-            id = 2,
-            name = "João",
-            email = "joaozinho1@gmail.com",
-            password = "123456",
-            date = LocalDate.parse("2024-01-03")
-        )
-        val user3 = User(
-            id = 3,
-            name = "Pedro",
-            email = "pedrosantoss@gmail.com",
-            password = "123456",
-            date = LocalDate.parse("2024-01-02")
-        )
-        val user4 = User(
-            id = 3,
-            name = "Pedro",
-            email = "pedrosantoss@gmail.com",
-            password = "123456",
-            date = LocalDate.parse("2024-01-03")
-        )
-        users = Arrays.asList(user1, user2, user3, user4)
-    }
-    //endregion
 
-    fun allUsers(): List<UserView> {
-        return users.stream().map { u ->
+    fun findAll(pagination: Pageable): Page<UserView> {
+        return repository.findAll(pagination).map { u ->
             userViewMapper.map(u)
-        }.collect(Collectors.toList())
+        }
     }
 
     fun searchForId(id: Long): UserView {
-        val user = users.stream().filter { u ->
-            u.id == id
-        }.findFirst().get()
+        val user = repository.findById(id)
+            .orElseThrow { NotFoundException(notFoundMessage) }
         return userViewMapper.map(user)
     }
 
-    fun create(form: NewUserForm) {
+    fun create(form: NewUserForm): UserView {
         val user = userFormMapper.map(form)
-        user.id = users.size.toLong() + 1
-        users = users.plus(user)
+        repository.save(user)
+        return userViewMapper.map(user)
     }
 
-    fun perDay(date: String?): Int {
-        var dateParam = LocalDate.parse(date)
-
-        val usersOnDate =
-            users.filter { u ->
-                u.date == dateParam
+    fun byDay(date: String?): Long {
+        val usersOnDate = if (date == null) {
+            repository.findAll().filter { u ->
+                u.dateAdd == LocalDate.now()
             }
-        return usersOnDate.size.toInt()
+        } else {
+            repository.findAll().filter { u ->
+                u.dateAdd == LocalDate.parse(date)
+            }
+        }
+        return usersOnDate.size.toLong()
     }
 
-    fun today(): Int {
-        val usersOnDate =
-            users.filter { u ->
-                u.date == LocalDate.now()
-            }
-        return usersOnDate.size.toInt()
+    fun update(form: UpdateUserForm): UserView {
+        val user = repository.findById(form.id)
+            .orElseThrow { NotFoundException(notFoundMessage) }
+
+        user.name = form.name
+        user.email = form.email
+        user.password = form.password
+        user.status = form.status ?: user.status
+
+        return userViewMapper.map(user)
+    }
+
+    fun delete(id: Long) {
+        repository.deleteById(id)
     }
 }
