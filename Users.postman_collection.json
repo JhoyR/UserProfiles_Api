@@ -1,0 +1,188 @@
+{
+	"info": {
+		"_postman_id": "4435531b-e401-46a0-8437-b790dcdc6c5c",
+		"name": "Users",
+		"description": "Api de usuários",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26372403"
+	},
+	"item": [
+		{
+			"name": "Busca por data",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/byDay?2024-01-07",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"byDay"
+					],
+					"query": [
+						{
+							"key": "2024-01-07",
+							"value": null
+						}
+					]
+				},
+				"description": "Recebe como parâmetro opcional a data no formato YYYY-MM-DD, quando vazio, retorna a quantidade de usuários inseridos na data atual."
+			},
+			"response": []
+		},
+		{
+			"name": "Inserir usuário",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Marcos Souza\",\r\n    \"email\": \"marcossouza@gmail.com\",\r\n    \"password\": \"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				},
+				"description": "Recebe os parâmetros do usuário para criação"
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar usuários",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				},
+				"description": "Retorna lista de usuários, podendo receber filtros de paginação."
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar usuário",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": 5,\r\n    \"status\": \"ATIVO\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				},
+				"description": "Recebe json com parâmetros do usuário a serem atualizados, incluindo id."
+			},
+			"response": []
+		},
+		{
+			"name": "Exclusão de usuário",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"5"
+					]
+				},
+				"description": "Recebe o id do usuário a ser excluído."
+			},
+			"response": []
+		},
+		{
+			"name": "Busca por id",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/users/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"1"
+					]
+				},
+				"description": "Retorna o usuário pelo id, quando existir."
+			},
+			"response": []
+		}
+	]
+}
