@@ -27,7 +27,6 @@ class UserController(private val service: UserService) {
     }
 
     @GetMapping("/{id}")
-    //Para que o spring saiba que o parâmetro {id} faz parte da uri - @PathVariable
     fun searchForId(@PathVariable id: Long): UserView {
         return service.findById(id)
     }
