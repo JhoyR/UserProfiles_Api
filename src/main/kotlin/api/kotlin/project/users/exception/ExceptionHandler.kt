@@ -47,8 +47,8 @@ class ExceptionHandler {
     ): ErrorView {
         val errorMessage = HashMap<String, String?>()
         //PARA CADA ERRO RECUPERADO, PEGA NOME DO CAMPO E MENSAGEM
-        exception.bindingResult.fieldErrors.forEach{
-            e -> errorMessage.put(e.field, e.defaultMessage)
+        exception.bindingResult.fieldErrors.forEach { e ->
+            errorMessage.put(e.field, e.defaultMessage)
         }
         return ErrorView(
             status = HttpStatus.BAD_REQUEST.value(),

@@ -10,11 +10,8 @@ import api.kotlin.project.users.repository.UserRepository
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.RequestParam
 import java.time.LocalDate
-import java.util.stream.Collectors
 
-//Anotação para classes representantes de serviços
 @Service
 
 class UserService(
@@ -30,7 +27,7 @@ class UserService(
         }
     }
 
-    fun searchForId(id: Long): UserView {
+    fun findById(id: Long): UserView {
         val user = repository.findById(id)
             .orElseThrow { NotFoundException(notFoundMessage) }
         return userViewMapper.map(user)
@@ -42,7 +39,7 @@ class UserService(
         return userViewMapper.map(user)
     }
 
-    fun byDay(date: String?): Long {
+    fun findByDateAdd(date: String?): Long {
         val usersOnDate = if (date == null) {
             repository.findAll().filter { u ->
                 u.dateAdd == LocalDate.now()
@@ -59,9 +56,9 @@ class UserService(
         val user = repository.findById(form.id)
             .orElseThrow { NotFoundException(notFoundMessage) }
 
-        user.name = form.name
-        user.email = form.email
-        user.password = form.password
+        user.name = form.name ?: user.name
+        user.email = form.email ?: user.email
+        user.password = form.password ?: user.password
         user.status = form.status ?: user.status
 
         return userViewMapper.map(user)

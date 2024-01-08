@@ -5,9 +5,9 @@ import api.kotlin.project.users.model.UserProfile
 import org.springframework.stereotype.Component
 
 @Component
-class UserFormMapper: Mapper<NewUserForm, UserProfile> {
+class UserFormMapper : Mapper<NewUserForm, UserProfile> {
     override fun map(t: NewUserForm): UserProfile {
-       return UserProfile(
+        return UserProfile(
             name = t.name,
             email = t.email,
             password = t.password

@@ -5,9 +5,9 @@ import api.kotlin.project.users.model.UserProfile
 import org.springframework.stereotype.Component
 
 @Component
-class UserViewMapper: Mapper<UserProfile, UserView> {
-    override fun map (t: UserProfile): UserView{
-       return UserView(
+class UserViewMapper : Mapper<UserProfile, UserView> {
+    override fun map(t: UserProfile): UserView {
+        return UserView(
             id = t.id,
             name = t.name,
             email = t.email,

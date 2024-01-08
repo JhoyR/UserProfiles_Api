@@ -4,7 +4,6 @@ import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotEmpty
 import jakarta.validation.constraints.Size
 
-//Classe que possui os atributos recebidos do cliente
 data class NewUserForm(
     @field:NotEmpty(message = "Nome não pode estar em branco")
     @field:Size(min = 3, max = 100, message = "Nome deve conter entre 3 e 100 caracteres")

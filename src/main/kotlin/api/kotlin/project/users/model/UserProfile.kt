@@ -4,7 +4,7 @@ import jakarta.persistence.*
 import java.time.LocalDate
 
 @Entity
-data class UserProfile (
+data class UserProfile(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
     var name: String,
@@ -13,6 +13,4 @@ data class UserProfile (
     @Enumerated(value = EnumType.STRING)
     var status: StatusUser = StatusUser.ATIVO,
     val dateAdd: LocalDate = LocalDate.now()
-){
-    constructor() : this(null, "", "", "")
-}
+)
