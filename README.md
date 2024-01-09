@@ -1,6 +1,6 @@
 ### 🚀 API REST Spring Boot com Kotlin
 
-Projeto de API RESTful usando Spring Boot e Kotlin.
+Projeto de API REST usando Spring Boot e Kotlin.
 
 ## Versões Utilizadas
 
